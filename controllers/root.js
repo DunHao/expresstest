@@ -2,9 +2,19 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 
-const uploadAudio = multer({ dest: 'uploads/audio' })
+const audioStorage = multer.diskStorage({
+  destination: (req, file, cb) => { cb(null, 'uploads/audio') },
+  filename: (req, file, cb) => { cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`) },
+});
 
-const uploadPhoto = multer({ dest: 'uploads/photo' })
+const photoStorage = multer.diskStorage({
+  destination: (req, file, cb) => { cb(null, 'uploads/photo') },
+  filename: (req, file, cb) => { cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`) },
+});
+
+const uploadAudio = multer({ storage: audioStorage });
+
+const uploadPhoto = multer({ storage: photoStorage });
 
 router.get('/', (req, res) => {
   res.status(200).json({ msg: 'Express server running' });
